@@ -12,38 +12,56 @@
         /* table{width:200px;border-collapse:collapse;} */
         /* table td{border: 1px solid #000;} */
     </style>
+    <script src="src/getTicker.js"></script>
 
     <script type="text/javascript">
         /* 初期設定 */
-        const Traders = { 1:'Binance', 2:'FTX', 3:'KuCoin', 4:'Bitstamp', 5:'Poloniex', 6:'Bittrex', 7:'OKEx', 8:'Liquid', 9:'Bitbank',}
+        window.myp = {}; 
+        const Traders = { 0:['Binance', getTickerBiAndsetVal], 1:['FTX', getTickerBiAndsetVal], 2:['KuCoin', getTickerBiAndsetVal], 3:['Bitstamp', getTickerBiAndsetVal], 4:['Poloniex', getTickerBiAndsetVal], 5:['Bittrex', getTickerBiAndsetVal], 6:['OKEx', getTickerBiAndsetVal], 7:['Liquid', getTickerBiAndsetVal], 8:['Bitbank', getTickerBiAndsetVal],}
+        const Pairs = { 0:'BTC/USD(T)', 1:'ETH/USD(T)', 2:'XRP/USD(T)', 3:'BNB/USD(T)'}
+        window.myp.Traders = Traders;
+        window.myp.Pairs   = Pairs;
 
-        var request = new XMLHttpRequest();
-        request.open('GET', 'https://api.binance.com/api/v3/ticker/bookTicker', true);
-        request.responseType = 'json';
-        request.onload = function () {
-            var data = this.response;
-            console.log(data);
+        window.onload = function() {
+            /* TBLヘッダ設定 */
+            let tbls = document.getElementsByTagName('table');
+            let tblhead = tbls.item(0).tHead;
+            for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++)
+                tblhead.rows[0].cells[cidx].textContent = Traders[cidx-1][0];
+
+            let tblbody = tbls.item(0).tBodies.item(0);
+            for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
+                for(let cidx = 1; cidx < tblbody.rows[ridx].cells.length; cidx+=2) {
+                    Traders[(cidx-1)/2][1](Pairs[ridx], tblbody.rows[ridx].cells[cidx], tblbody.rows[ridx].cells[cidx+1]);
+                }
+            }
         };
-        request.send();
     </script>
 
     <table border="1">
-        <caption text-align="left">----</caption>
-        <tr>
-            <th>通貨ペア</th><th>Binance</th><th>FTX</th><th>KuCoin</th><th>Bitstamp</th><th>Poloniex</th><th>Bittrex</th><th>OKEx</th><th>Liquid</th><th>Bitbank</th>
-        </tr>
-        <tr>
-            <td>BTC/USD(T)</td><td>27</td><td>27</td><td>27</td><td>27</td><td>27</td><td>27</td><td>27</td><td>27</td><td>27</td>
-        </tr>
-        <tr>
-            <td>ETH/USD(T)</td><td>28</td><td>28</td><td>28</td><td>28</td><td>28</td><td>28</td><td>28</td><td>28</td><td>28</td>
-        </tr>
-        <tr>
-            <td>XRP/USD(T)</td><td>29</td><td>29</td><td>29</td><td>29</td><td>29</td><td>29</td><td>29</td><td>29</td><td>29</td>
-        </tr>
-        <tr>
-            <td>BNB/USD(T)</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td>
-        </tr>
-</table>
+        <caption text-align="left">現在値</caption>
+        <thead>
+            <tr>
+                <th></th><th colspan="2">Binance</th><th colspan="2">FTX</th><th colspan="2">KuCoin</th><th colspan="2">Bitstamp</th><th colspan="2">Poloniex</th><th colspan="2">Bittrex</th><th colspan="2">OKEx</th><th colspan="2">Liquid</th><th colspan="2">Bitbank</th>
+            </tr>
+            <tr>
+                <th>通貨ペア</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>BTC/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>ETH/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>XRP/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>BNB/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
