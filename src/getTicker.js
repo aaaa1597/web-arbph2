@@ -6,8 +6,10 @@ function getTickerBiAndsetVal(pair, retbidrow, retaskrow) {
     request.responseType = 'json';
     request.onload = function () {
         let data = this.response;
-        retbidrow.textContent = parseFloat(data['bidPrice']).toString();
-        retaskrow.textContent = parseFloat(data['askPrice'].toString());
+        retbidrow.textContent = parseFloat(data['bidPrice']);
+        retaskrow.textContent = parseFloat(data['askPrice']);
     };
     request.send();
+
+//    console.log(window.myp.Pairs);
 }

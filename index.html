@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>aaaaaaaaaaaa</title>
+    <title>価格差チェック</title>
 </head>
 <body>
     <style>
@@ -27,12 +27,16 @@
             let tbls = document.getElementsByTagName('table');
             let tblhead = tbls.item(0).tHead;
             for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++)
-                tblhead.rows[0].cells[cidx].textContent = Traders[cidx-1][0];
+                tblhead.rows[0].cells[cidx].textContent = Pairs[cidx-1];
 
+            for(let ridx = 2; ridx < tblhead.rows.length; ridx++)
+                tblhead.rows[ridx].cells[0].textContent = Traders[cidx-2][0];
+
+            /* Bid/Ask取得 */
             let tblbody = tbls.item(0).tBodies.item(0);
             for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
                 for(let cidx = 1; cidx < tblbody.rows[ridx].cells.length; cidx+=2) {
-                    Traders[(cidx-1)/2][1](Pairs[ridx], tblbody.rows[ridx].cells[cidx], tblbody.rows[ridx].cells[cidx+1]);
+                    Traders[(cidx-1)/2][1](Pairs[(cidx-1)/2], tblbody.rows[ridx].cells[cidx], tblbody.rows[ridx].cells[cidx+1]);
                 }
             }
         };
@@ -42,24 +46,39 @@
         <caption text-align="left">現在値</caption>
         <thead>
             <tr>
-                <th></th><th colspan="2">Binance</th><th colspan="2">FTX</th><th colspan="2">KuCoin</th><th colspan="2">Bitstamp</th><th colspan="2">Poloniex</th><th colspan="2">Bittrex</th><th colspan="2">OKEx</th><th colspan="2">Liquid</th><th colspan="2">Bitbank</th>
+                <th>通貨ペア</th><th colspan="2">BTC/USD(T)</th><th colspan="2">ETH/USD(T)</th><th colspan="2">XRP/USD(T)</th><th colspan="2">BNB/USD(T)</th>
             </tr>
             <tr>
-                <th>通貨ペア</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th>
+                <th>業者</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th><th>Bid</th><th>Ask</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>BTC/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+                <td>Binance</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
             </tr>
             <tr>
-                <td>ETH/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+                <td>FTX</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
             </tr>
             <tr>
-                <td>XRP/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+                <td>KuCoin</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
             </tr>
             <tr>
-                <td>BNB/USD(T)</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+                <td>Bitstamp</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>Poloniex</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>Bittrex</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>OKEx</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>Liquid</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+            </tr>
+            <tr>
+                <td>Bitbank</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
             </tr>
         </tbody>
     </table>
