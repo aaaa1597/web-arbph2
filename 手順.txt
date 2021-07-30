@@ -1,0 +1,63 @@
+/* pythonの仮想環境を構築 */
+参考 : https://qiita.com/fiftystorm36/items/b2fd47cf32c7694adc2e
+sudo apt install python3-venv
+
+cd ~/arbph2
+python3 -m venv venv
+
+/* 次回以降の起動 */
+cd ~/arbph2
+source venv/bin/activate
+
+/* 次回以降の終了 */
+deactivate
+
+/* ubuntuにvscodeインストール */
+お気に入りにあるアプリストアからvscodeを探してインストールするとできた。
+
+vscode起動 → Python Select Interpreterに、~/arbph2/venvを選ぶ。
+gitから取得したソース一式のうち、index.htmlとか*.jsのファイルとかを全削除
+.vscodeもフォルダごと削除
+
+で、vscode再起動したら、pythonのデバッグができた。
+
+/* venv環境で、flaskのインストール */
+pip3 install flask
+※sudoを付けると、コマンドが見つからないって怒られる。
+
+/* venv環境で、flaskの実行手順 */
+export FLASK_APP=app.py
+flask run
+## python -m flask run
+## 上記でもOK
+
+
+/* vscodeのflaskデバッグ設定を追加 */
+参考 : https://www.atmarkit.co.jp/ait/articles/1807/24/news024_2.html
+http://localhost:5000/
+右ドック → 実行とデバッグ → 上の歯車マーク(launch.json) → 構成の追加ボタン押下 → Python
+上の[デバッグの開始]ボタンの横のドロップダウンから[Python: Flask]を選択
+---- 下記のようになるはず。挿入位置はどこでもOK。 ----------
+"configurations": [
+    // …… 省略 ……
+    {
+      "name": "PyFlsk",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": {
+        "FLASK_APP": "app.py"
+      },
+      "args": [
+        "run",
+        "--no-debugger",
+        "--no-reload"
+      ]
+    },
+------------------------------------------------------------
+
+
+
+/* ubuntuで、gitコミットの方法 */
+
+

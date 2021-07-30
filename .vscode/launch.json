@@ -1,21 +1,32 @@
 {
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-		// ローカルにあるファイルをデバッグ
         {
-            "name": "DebugLocalHTML",					// デバッグ設定の名称
-            "type": "chrome",							// デバッグ種別を指定（chrome/node/monoなど）
-            "request": "launch",						// lanunchまたはattachを指定
-            "file": "d:\\Products\\arbph2\\index.html"	// デバッグ対象ファイル
+            "name": "PyFlsk",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_ENV": "development"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--host=0.0.0.0",
+                "--port=5000"
+            ],
+            "jinja": true
         },
-		// Webサーバー上にあるファイルをデバッグ
         {
-            "name": "RemoteDebugHTML",					// デバッグ設定の名称
-            "type": "chrome",							// デバッグ種別を指定（chrome/node/monoなど）
-            "request": "launch",						// lanunchまたはattachを指定
-            "url": "http://127.0.0.1:8080/index.html",	// Webサーバー上にあるデバッグ対象のURLを指定
-            "webRoot": "${workspaceRoot}/",				// マッピングするローカルファイルが配置されているディレクトリを指定
-            "sourceMaps": true							// ソースマップの有効・無効の指定（true/false）
-        },
+            "name": "pythonapp",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
     ]
 }
