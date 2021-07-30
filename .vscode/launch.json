@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+		// ローカルにあるファイルをデバッグ
+        {
+            "name": "DebugLocalHTML",					// デバッグ設定の名称
+            "type": "chrome",							// デバッグ種別を指定（chrome/node/monoなど）
+            "request": "launch",						// lanunchまたはattachを指定
+            "file": "d:\\Products\\arbph2\\index.html"	// デバッグ対象ファイル
+        },
+		// Webサーバー上にあるファイルをデバッグ
+        {
+            "name": "RemoteDebugHTML",					// デバッグ設定の名称
+            "type": "chrome",							// デバッグ種別を指定（chrome/node/monoなど）
+            "request": "launch",						// lanunchまたはattachを指定
+            "url": "http://127.0.0.1:8080/index.html",	// Webサーバー上にあるデバッグ対象のURLを指定
+            "webRoot": "${workspaceRoot}/",				// マッピングするローカルファイルが配置されているディレクトリを指定
+            "sourceMaps": true							// ソースマップの有効・無効の指定（true/false）
+        },
+    ]
+}
