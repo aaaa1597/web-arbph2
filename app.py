@@ -6,7 +6,7 @@ def index():
   return render_template('index.html')
 
 @app.route("/getTickerBi")
-def getticker():
+def gettickerbi():
   return {'ask' : 500.1, 'bid' : 500.2}
 
 if __name__ == '__main__':

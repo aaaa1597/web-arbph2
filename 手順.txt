@@ -61,14 +61,23 @@ http://localhost:5000/
 ようわからん。windowsのtortoisegitなら、コミット/pushってできるのに、commandからだとできん。なんでだ？
 
 /* ubuntu20.0 + vscode + flaskのデバッグ環境が壊れた。再作成する。 */
-~/home/venvを削除する。
-で再作成
 cd ~/arbph2
+rm -rf venv
 python3 -m venv venv
 sudo apt install python3-pip
 source venv/bin/activate
+vscode起動
+ctrl+shift+p → python select interrupterを選ぶ
+./venv/bin/pythonを選択
+一旦、デバッグ実行(右ドック → デバッグ → 上メニューボタン → PyFlsk)
 pip3 install flask
-→できた。復活。
+も一回、デバッグ実行(右ドック → デバッグ → 上メニューボタン → PyFlsk)
+  →できた。復活。
 
 /* ubuntuで、gitコミットの方法2 */
+git status
+git diff
+コミットのコマンドがわからず。
+git push --progress "origin" main:main
 
+git branch --contains
