@@ -75,9 +75,12 @@ pip3 install flask
   →できた。復活。
 
 /* ubuntuで、gitコミットの方法2 */
+git branch --contains
 git status
 git diff
-コミットのコマンドがわからず。
+git add xxxx.pyとか index.htmlとか
+git rm -r xxxxとか
+git commit -m "少し変更"
 git push --progress "origin" main:main
-
-git branch --contains
+### Username：rg687076
+### Password：XS3hwYaW
