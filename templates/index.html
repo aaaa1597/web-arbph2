@@ -13,31 +13,33 @@
         /* table td{border: 1px solid #000;} */
     </style>
 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/getTicker.js') }}"></script>
+
     <script type="text/javascript">
         /* 初期設定 */
-        // window.myp = {}; 
-        // const Traders = { 0:['Binance', getTickerBiAndsetVal], 1:['FTX', getTickerFxAndsetVal], 2:['KuCoin', getTickerKcAndsetVal], 3:['Bitstamp', getTickerBiAndsetVal], 4:['Poloniex', getTickerBiAndsetVal], 5:['Bittrex', getTickerBiAndsetVal], 6:['OKEx', getTickerBiAndsetVal], 7:['Liquid', getTickerBiAndsetVal], 8:['Bitbank', getTickerBiAndsetVal],}
-        // const Pairs = { 0:'BTC/USD(T)', 1:'ETH/USD(T)', 2:'XRP/USD(T)', 3:'BNB/USD(T)'}
-        // window.myp.Traders = Traders;
-        // window.myp.Pairs   = Pairs;
+        window.myp = {}; 
+        const Traders = { 0:['Binance', getTickerBiAndsetVal], 1:['FTX', getTickerBiAndsetVal], 2:['KuCoin', getTickerBiAndsetVal], 3:['Bitstamp', getTickerBiAndsetVal], 4:['Poloniex', getTickerBiAndsetVal], 5:['Bittrex', getTickerBiAndsetVal], 6:['OKEx', getTickerBiAndsetVal], 7:['Liquid', getTickerBiAndsetVal], 8:['Bitbank', getTickerBiAndsetVal],}
+        const Pairs = { 0:'BTC/USD(T)', 1:'ETH/USD(T)', 2:'XRP/USD(T)', 3:'BNB/USD(T)'}
+        window.myp.Traders = Traders;
+        window.myp.Pairs   = Pairs;
 
         window.onload = function() {
             /* TBLヘッダ設定 */
             let tbls = document.getElementsByTagName('table');
             let tblhead = tbls.item(0).tHead;
-            // for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++)
-            //     tblhead.rows[0].cells[cidx].textContent = Pairs[cidx-1];
+            for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++)
+                tblhead.rows[0].cells[cidx].textContent = Pairs[cidx-1];
 
-            // for(let ridx = 2; ridx < tblhead.rows.length; ridx++)
-            //     tblhead.rows[ridx].cells[0].textContent = Traders[cidx-2][0];
+            for(let ridx = 2; ridx < tblhead.rows.length; ridx++)
+                tblhead.rows[ridx].cells[0].textContent = Traders[cidx-2][0];
 
             /* Bid/Ask取得 */
             let tblbody = tbls.item(0).tBodies.item(0);
             for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
                 for(let cidx = 1; cidx < tblbody.rows[ridx].cells.length; cidx+=2) {
 //                    Traders[ridx][1](Pairs[(cidx-1)/2], tblbody.rows[ridx].cells[cidx], tblbody.rows[ridx].cells[cidx+1]);
-                    url = "http://192.168.1.10:5000/getTickerBi";
-                    fetch(url).then(res => {
+                    // url = "http://192.168.1.10:5000/getTickerBi";
+                    fetch('getTickerBi').then(res => {
                         return res.json();
                     }).then(data => {
                         tblbody.rows[ridx].cells[cidx].textContent = parseFloat(data['bid']);
