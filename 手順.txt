@@ -57,7 +57,18 @@ http://localhost:5000/
 ------------------------------------------------------------
 
 
-
 /* ubuntuで、gitコミットの方法 */
+ようわからん。windowsのtortoisegitなら、コミット/pushってできるのに、commandからだとできん。なんでだ？
 
+/* ubuntu20.0 + vscode + flaskのデバッグ環境が壊れた。再作成する。 */
+~/home/venvを削除する。
+で再作成
+cd ~/arbph2
+python3 -m venv venv
+sudo apt install python3-pip
+source venv/bin/activate
+pip3 install flask
+→できた。復活。
+
+/* ubuntuで、gitコミットの方法2 */
 
