@@ -18,7 +18,7 @@
     <script type="text/javascript">
         /* 初期設定 */
         window.myp = {}; 
-        const Traders = { 0:['Binance', getTickerBiAndsetVal], 1:['FTX', getTickerBiAndsetVal], 2:['KuCoin', getTickerBiAndsetVal], 3:['Bitstamp', getTickerBiAndsetVal], 4:['Poloniex', getTickerBiAndsetVal], 5:['Bittrex', getTickerBiAndsetVal], 6:['OKEx', getTickerBiAndsetVal], 7:['Liquid', getTickerBiAndsetVal], 8:['Bitbank', getTickerBiAndsetVal],}
+        const Traders = { 0:['Binance', 'getTickerBi'], 1:['FTX', 'getTickerFx'], 2:['KuCoin', 'getTickerKc'], 3:['Bitstamp', 'getTickerBs'], 4:['Poloniex', 'getTickerPn'], 5:['Bittrex', 'getTickerBt'], 6:['OKEx', 'getTickerEx'], 7:['Liquid', 'getTickerLq'], 8:['Bitbank', 'getTickerBb'],}
         const Pairs = { 0:'BTC/USD(T)', 1:'ETH/USD(T)', 2:'XRP/USD(T)', 3:'BNB/USD(T)'}
         window.myp.Traders = Traders;
         window.myp.Pairs   = Pairs;
@@ -37,13 +37,22 @@
             let tblbody = tbls.item(0).tBodies.item(0);
             for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
                 for(let cidx = 1; cidx < tblbody.rows[ridx].cells.length; cidx+=2) {
-//                    Traders[ridx][1](Pairs[(cidx-1)/2], tblbody.rows[ridx].cells[cidx], tblbody.rows[ridx].cells[cidx+1]);
-                    // url = "http://192.168.1.10:5000/getTickerBi";
-                    fetch('getTickerBi').then(res => {
+                    let pair    = Pairs[(cidx-1)/2];
+                    let bidcell = tblbody.rows[ridx].cells[cidx];
+                    let askcell = tblbody.rows[ridx].cells[cidx+1];
+                    let method   = Traders[ridx][1];
+
+                    const sndprm  = {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json; charset=utf-8" },
+                        body: JSON.stringify({'pair':pair})
+                    };
+                    console.log(sndprm);
+                    fetch(method, sndprm).then(res => {
                         return res.json();
                     }).then(data => {
-                        tblbody.rows[ridx].cells[cidx].textContent = parseFloat(data['bid']);
-                        tblbody.rows[ridx].cells[cidx+1].textContent = parseFloat(data['ask']);
+                        bidcell.textContent = parseFloat(data['bid']);
+                        askcell.textContent = parseFloat(data['ask']);
                     });
                 }
             }

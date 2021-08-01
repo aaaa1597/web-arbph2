@@ -84,3 +84,8 @@ git commit -m "少し変更"
 git push --progress "origin" main:main
 ### Username：rg687076
 ### Password：XS3hwYaW
+
+/* 次回以降の起動方法 */
+ubuntu起動 → 一旦、デバッグ実行(右ドック → デバッグ → 上メニューボタン → PyFlsk)
+
+
