@@ -1,54 +1,47 @@
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
+import GetTicker
+
 @app.route("/")
 def index():
   return render_template('index.html')
 
 @app.route("/getTickerBi", methods=['post'])
-def gettickerbi():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.2}
+def getTickerbi():
+  return GetTicker.getTickerBi(request.json['pair'])
 
 @app.route("/getTickerFx", methods=['post'])
 def getTickerfx():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.3}
+  return GetTicker.getTickerFx(request.json['pair'])
 
 @app.route("/getTickerKc", methods=['post'])
 def getTickerkc():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.4}
+  return GetTicker.getTickerKc(request.json['pair'])
 
 @app.route("/getTickerBs", methods=['post'])
 def getTickerbs():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.5}
+  return GetTicker.getTickerBs(request.json['pair'])
 
 @app.route("/getTickerPn", methods=['post'])
 def getTickerpn():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.6}
+  return GetTicker.getTickerPn(request.json['pair'])
 
 @app.route("/getTickerBt", methods=['post'])
 def getTickerbt():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.7}
+  return GetTicker.getTickerBt(request.json['pair'])
 
 @app.route("/getTickerEx", methods=['post'])
 def getTickerex():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.8}
+  return GetTicker.getTickerEx(request.json['pair'])
 
 @app.route("/getTickerLq", methods=['post'])
 def getTickerlq():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 500.9}
+  return GetTicker.getTickerLq(request.json['pair'])
 
 @app.route("/getTickerBb", methods=['post'])
 def getTickerbb():
-  print(request.json['pair'])
-  return {'ask' : 500.1, 'bid' : 501.0}
+  return GetTicker.getTickerBb(request.json['pair'])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
