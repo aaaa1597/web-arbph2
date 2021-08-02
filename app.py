@@ -9,7 +9,9 @@ def index():
 
 @app.route("/getTickerBi", methods=['post'])
 def getTickerbi():
-  return GetTicker.getTickerBi(request.json['pair'])
+  pair = request.json['pair'].replace('(T)', 'T').replace('/', '')
+  ret = GetTicker.getTickerBi(pair)['bi']
+  return {'bid':ret['tksbid'], 'ask':ret['tksask']}
 
 @app.route("/getTickerFx", methods=['post'])
 def getTickerfx():
