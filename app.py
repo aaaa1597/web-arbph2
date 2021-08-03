@@ -15,7 +15,9 @@ def getTickerbi():
 
 @app.route("/getTickerFx", methods=['post'])
 def getTickerfx():
-  return GetTicker.getTickerFx(request.json['pair'])
+  pair = request.json['pair'].replace('(T)', 'T')
+  ret = GetTicker.getTickerFx(pair)['fx']
+  return {'bid':ret['tksbid'], 'ask':ret['tksask']}
 
 @app.route("/getTickerKc", methods=['post'])
 def getTickerkc():
