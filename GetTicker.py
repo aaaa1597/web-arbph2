@@ -105,9 +105,35 @@ def getTickerKc(pair=None, retTickers=None):
 
     return retTickers
 
-def getTickerBs(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 500.5}
+def getTickerBs(pair=None, retTickers=None):
+    if retTickers is None: retTickers = {}
+    endpoint = 'https://www.bitstamp.net'
+    method = '/api/v2/ticker'
+    # https://www.bitstamp.net/api/v2/ticker/btcusdt/
+    # https://www.bitstamp.net/api/v2/ticker/ethusdt/
+    # https://www.bitstamp.net/api/v2/ticker/xrpusdt/
+    ###### https://www.bitstamp.net/api/v2/ticker/bnbusdt/
+
+    try:
+        if pair is None:
+            raise Exception('argment is none not supported!!!')
+        else:
+            ret = requests.get(endpoint+method + '/'+pair+'/', timeout=5)
+            resdict = json.loads(ret.text)
+            if ((('ask' in resdict) == True) and (('bid' in resdict) == True)):
+                retTickers['bs'] = {'tksbroker' : 'bs', 'tksbid' : float(resdict['bid']), 'tksask' : float(resdict['ask']), 'symbol':pair}
+            else:
+                retTickers['bs'] = {'tksbroker' : 'bs', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
+    except urllib.error.HTTPError as e:
+        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+    except Exception as e:
+        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+
+    # エラー判定
+    if 'errormsg' in retTickers['bs']:
+        print('aaaaa-getTiccker(bs): errormsg:	{0}'.format(retTickers['bs']['errormsg']))
+
+    return retTickers
 
 def getTickerPn(pair):
     print('pair=' + pair)
