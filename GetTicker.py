@@ -70,9 +70,40 @@ def getTickerFx(pair=None, retTickers=None):
 
     return retTickers
 
-def getTickerKc(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 500.4}
+def getTickerKc(pair=None, retTickers=None):
+    if retTickers is None: retTickers = {}
+    endpoint = 'https://api.kucoin.com'
+    method = '/api/v1/market/orderbook/level1'
+    # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BTC-USDT
+    # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=ETH-USDT
+    # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XRP-USDT
+    # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BNB-USDT
+
+    try:
+        if pair is None:
+            ret = requests.get(endpoint+method, timeout=30)
+            retres = [item for item in json.loads(ret.text) if item['symbol'] in ('BTC-USDT','ETH-USDT','XRP-USDT','BNB-USDT')]
+            tmpret = {}
+            for item in retres:
+                tmpret[item['symbol']] = {'tksbid':float(item['bestBid']), 'tksask':float(item['bestAsk']), 'symbol':item['name']}
+            retTickers['kc'] = tmpret
+        else:
+            ret = requests.get(endpoint+method + '?symbol='+pair, timeout=5)
+            resdict = json.loads(ret.text)
+            if ((('data' in resdict) == True) and (('bestAsk' in resdict['data']) == True) and (('bestBid' in resdict['data']) == True)):
+                retTickers['kc'] = {'tksbroker' : 'kc', 'tksbid' : float(resdict['data']['bestBid']), 'tksask' : float(resdict['data']['bestAsk']), 'symbol':pair}
+            else:
+                retTickers['kc'] = {'tksbroker' : 'kc', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
+    except urllib.error.HTTPError as e:
+        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+    except Exception as e:
+        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+
+    # エラー判定
+    if 'errormsg' in retTickers['kc']:
+        print('aaaaa-getTiccker(kc): errormsg:	{0}'.format(retTickers['kc']['errormsg']))
+
+    return retTickers
 
 def getTickerBs(pair):
     print('pair=' + pair)
