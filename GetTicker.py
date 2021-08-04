@@ -224,7 +224,7 @@ def getTickerEx(pair=None, retTickers=None):
             retres = [item for item in json.loads(ret.text) if item['product_id'] in ('BTC-USDT','ETH-USDT','XRP-USDT','BNB-USDT')]
             tmpret = {}
             for item in retres:
-                tmpret[item['product_id']] = {'tksbid':float(item['bestBid']), 'tksask':float(item['bestAsk']), 'product_id':item['product_id']}
+                tmpret[item['product_id']] = {'tksbid':float(item['best_bid']), 'tksask':float(item['best_ask']), 'symbol':item['product_id']}
             retTickers['ex'] = tmpret
         else:
             ret = requests.get((endpoint+method).format(pair), timeout=5)
@@ -244,11 +244,40 @@ def getTickerEx(pair=None, retTickers=None):
 
     return retTickers
 
-def getTickerLq(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 500.9}
+def getTickerLq(pair=None, retTickers=None):
+    if retTickers is None: retTickers = {}
+    endpoint = 'https://api.liquid.com'
+    method = '/products'
+    # https://www.okex.com/api/spot/v3/instruments/ticker
+    # https://www.okex.com/api/spot/v3/instruments/BTC-USDT/ticker
+    # https://www.okex.com/api/spot/v3/instruments/ETH-USDT/ticker
+    # https://www.okex.com/api/spot/v3/instruments/XRP-USDT/ticker
+    ###### https://www.okex.com/api/spot/v3/instruments/BNB-USDT/ticker
 
-def getTickerBb(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 501.0}
+    try:
+        if pair is None:
+            ret = requests.get(endpoint+method, timeout=30)
+            retres = [item for item in json.loads(ret.text) if item['currency_pair_code'] in ('BTCUSDT','ETHUSDT','XRPUSDT','BNBUSDT')]
+            tmpret = {}
+            for item in retres:
+                tmpret[item['currency_pair_code']] = {'tksbid':float(item['market_bid']), 'tksask':float(item['market_ask']), 'symbol':item['currency_pair_code']}
+            retTickers['lq'] = tmpret
+        else:
+            id = '/624' if pair=='BTCUSDT' else '/625' if pair=='ETHUSDT' else ''
+            if id == '': return {'tksbid':'---', 'tksask':'---'}
+            ret = requests.get(endpoint + method + id, timeout=5)
+            resdict = json.loads(ret.text)
+            if ((('market_bid' in resdict) == True) and (('market_ask' in resdict) == True)):
+                retTickers['lq'] = {'tksbroker' : 'lq', 'tksbid' : float(resdict['market_bid']), 'tksask' : float(resdict['market_ask']), 'symbol':resdict['currency_pair_code']}
+            else:
+                retTickers['lq'] = {'tksbroker' : 'lq', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
+    except urllib.error.HTTPError as e:
+        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+    except Exception as e:
+        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
 
+    # エラー判定
+    if 'errormsg' in retTickers['lq']:
+        print('aaaaa-getTiccker(lq): errormsg:	{0}'.format(retTickers['lq']['errormsg']))
+
+    return retTickers

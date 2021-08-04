@@ -53,11 +53,9 @@ def getTickerex():
 
 @app.route("/getTickerLq", methods=['post'])
 def getTickerlq():
-  return GetTicker.getTickerLq(request.json['pair'])
-
-@app.route("/getTickerBb", methods=['post'])
-def getTickerbb():
-  return GetTicker.getTickerBb(request.json['pair'])
+  pair = request.json['pair'].replace('(T)', 'T').replace('/', '')
+  ret = GetTicker.getTickerLq(pair)['lq']
+  return {'bid':ret['tksbid'], 'ask':ret['tksask']}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
