@@ -24,7 +24,7 @@ def getTickerBi(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['bi']:
@@ -62,7 +62,7 @@ def getTickerFx(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['fx']:
@@ -97,7 +97,7 @@ def getTickerKc(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['kc']:
@@ -127,7 +127,7 @@ def getTickerBs(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['bs']:
@@ -164,7 +164,7 @@ def getTickerPn(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['pn']:
@@ -200,7 +200,7 @@ def getTickerBt(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['bt']:
@@ -236,7 +236,7 @@ def getTickerEx(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['ex']:
@@ -274,7 +274,7 @@ def getTickerLq(pair=None, retTickers=None):
     except urllib.error.HTTPError as e:
         retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
     except Exception as e:
-        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'errormsg': str(e).replace("'", '') }
 
     # エラー判定
     if 'errormsg' in retTickers['lq']:
