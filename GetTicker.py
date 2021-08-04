@@ -264,7 +264,7 @@ def getTickerLq(pair=None, retTickers=None):
             retTickers['lq'] = tmpret
         else:
             id = '/624' if pair=='BTCUSDT' else '/625' if pair=='ETHUSDT' else ''
-            if id == '': return {'tksbid':'---', 'tksask':'---'}
+            if id == '': return {'lq': {'error' : 'illigalargument', 'errormsg': 'not supporterd pair!!! {}'.format(pair)}}
             ret = requests.get(endpoint + method + id, timeout=5)
             resdict = json.loads(ret.text)
             if ((('market_bid' in resdict) == True) and (('market_ask' in resdict) == True)):

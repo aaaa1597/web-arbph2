@@ -55,7 +55,6 @@
                         body: JSON.stringify({'pair':pair})
                     };
                     fetch(method, sndprm).then(res => {
-                        console.log(res);
                         return res.json();
                     }).then(data => {
                         bidcell.textContent = data['bid'];
