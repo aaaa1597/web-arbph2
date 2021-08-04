@@ -41,11 +41,15 @@ def getTickerpn():
 
 @app.route("/getTickerBt", methods=['post'])
 def getTickerbt():
-  return GetTicker.getTickerBt(request.json['pair'])
+  pair = request.json['pair'].replace('(T)', 'T').replace('/', '-')
+  ret = GetTicker.getTickerBt(pair)['bt']
+  return {'bid':ret['tksbid'], 'ask':ret['tksask']}
 
 @app.route("/getTickerEx", methods=['post'])
 def getTickerex():
-  return GetTicker.getTickerEx(request.json['pair'])
+  pair = request.json['pair'].replace('(T)', 'T').replace('/', '-')
+  ret = GetTicker.getTickerEx(pair)['ex']
+  return {'bid':ret['tksbid'], 'ask':ret['tksask']}
 
 @app.route("/getTickerLq", methods=['post'])
 def getTickerlq():

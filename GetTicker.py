@@ -172,13 +172,77 @@ def getTickerPn(pair=None, retTickers=None):
 
     return retTickers
 
-def getTickerBt(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 500.7}
+def getTickerBt(pair=None, retTickers=None):
+    if retTickers is None: retTickers = {}
+    endpoint = 'https://api.bittrex.com/v3'
+    method = '/markets/{}/ticker'
+    # https://api.bittrex.com/v3/markets/tickers
+    # https://api.bittrex.com/v3/markets/BTC-USDT/ticker
+    # https://api.bittrex.com/v3/markets/ETH-USDT/ticker
+    # https://api.bittrex.com/v3/markets/XRP-USDT/ticker
+    ###### https://api.bittrex.com/v3/markets/BNB-USDT/ticker
 
-def getTickerEx(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 500.8}
+    try:
+        if pair is None:
+            ret = requests.get(endpoint+'/markets/tickers', timeout=30)
+            retres = [item for item in json.loads(ret.text) if item['symbol'] in ('BTC-USDT','ETH-USDT','XRP-USDT','BNB-USDT')]
+            tmpret = {}
+            for item in retres:
+                tmpret[item['symbol']] = {'tksbid':float(item['bestBid']), 'tksask':float(item['bestAsk']), 'symbol':item['symbol']}
+            retTickers['bt'] = tmpret
+        else:
+            ret = requests.get((endpoint+method).format(pair), timeout=5)
+            resdict = json.loads(ret.text)
+            if ((('bidRate' in resdict) == True) and (('askRate' in resdict) == True)):
+                retTickers['bt'] = {'tksbroker' : 'bt', 'tksbid' : float(resdict['bidRate']), 'tksask' : float(resdict['askRate']), 'symbol':resdict['symbol']}
+            else:
+                retTickers['bt'] = {'tksbroker' : 'bt', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
+    except urllib.error.HTTPError as e:
+        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+    except Exception as e:
+        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+
+    # エラー判定
+    if 'errormsg' in retTickers['bt']:
+        print('aaaaa-getTiccker(bt): errormsg:	{0}'.format(retTickers['bt']['errormsg']))
+
+    return retTickers
+
+def getTickerEx(pair=None, retTickers=None):
+    if retTickers is None: retTickers = {}
+    endpoint = 'https://www.okex.com'
+    method = '/api/spot/v3/instruments/{}/ticker'
+    # https://www.okex.com/api/spot/v3/instruments/ticker
+    # https://www.okex.com/api/spot/v3/instruments/BTC-USDT/ticker
+    # https://www.okex.com/api/spot/v3/instruments/ETH-USDT/ticker
+    # https://www.okex.com/api/spot/v3/instruments/XRP-USDT/ticker
+    ###### https://www.okex.com/api/spot/v3/instruments/BNB-USDT/ticker
+
+    try:
+        if pair is None:
+            ret = requests.get(endpoint+'/api/spot/v3/instruments/ticker', timeout=30)
+            retres = [item for item in json.loads(ret.text) if item['product_id'] in ('BTC-USDT','ETH-USDT','XRP-USDT','BNB-USDT')]
+            tmpret = {}
+            for item in retres:
+                tmpret[item['product_id']] = {'tksbid':float(item['bestBid']), 'tksask':float(item['bestAsk']), 'product_id':item['product_id']}
+            retTickers['ex'] = tmpret
+        else:
+            ret = requests.get((endpoint+method).format(pair), timeout=5)
+            resdict = json.loads(ret.text)
+            if ((('best_bid' in resdict) == True) and (('best_ask' in resdict) == True)):
+                retTickers['ex'] = {'tksbroker' : 'ex', 'tksbid' : float(resdict['best_bid']), 'tksask' : float(resdict['best_ask']), 'symbol':resdict['product_id']}
+            else:
+                retTickers['ex'] = {'tksbroker' : 'ex', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
+    except urllib.error.HTTPError as e:
+        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+    except Exception as e:
+        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+
+    # エラー判定
+    if 'errormsg' in retTickers['ex']:
+        print('aaaaa-getTiccker(ex): errormsg:	{0}'.format(retTickers['ex']['errormsg']))
+
+    return retTickers
 
 def getTickerLq(pair):
     print('pair=' + pair)
