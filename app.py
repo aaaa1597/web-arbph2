@@ -33,7 +33,11 @@ def getTickerbs():
 
 @app.route("/getTickerPn", methods=['post'])
 def getTickerpn():
-  return GetTicker.getTickerPn(request.json['pair'])
+  pairs = request.json['pair'].replace('(T)', 'T').split('/')
+  pair = pairs[1] + '_' + pairs[0]
+  ret = GetTicker.getTickerPn(pair)['pn']
+  'USDT_BTC'
+  return {'bid':ret['tksbid'], 'ask':ret['tksask']}
 
 @app.route("/getTickerBt", methods=['post'])
 def getTickerbt():

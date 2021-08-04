@@ -135,9 +135,42 @@ def getTickerBs(pair=None, retTickers=None):
 
     return retTickers
 
-def getTickerPn(pair):
-    print('pair=' + pair)
-    return {'ask' : 500.1, 'bid' : 500.6}
+# Poloniex
+def getTickerPn(pair=None, retTickers=None):
+    if retTickers is None: retTickers = {}
+    endpoint = 'https://poloniex.com/public'
+    method = '?command=returnTicker'
+    # USDT_BTC
+    # USDT_ETH
+    # USDT_XRP
+    # USDT_BNB
+    ###### https://www.bitstamp.net/api/v2/ticker/bnbusdt/
+
+    try:
+        if pair is None:
+            ret = requests.get(endpoint+method, timeout=30)
+            retres = [item for item in json.loads(ret.text) if item in ('USDT_BTC','USDT_ETH','USDT_XRP','USDT_BNB')]
+            tmpret = {}
+            for item in retres:
+                tmpret[item['symbol']] = {'tksbid':float(item['bestBid']), 'tksask':float(item['bestAsk']), 'symbol':item['name']}
+            retTickers['kc'] = tmpret
+        else:
+            ret = requests.get(endpoint+method, timeout=30)
+            resdict = json.loads(ret.text)
+            if (((pair in resdict) == True) and (('lowestAsk' in resdict[pair]) == True) and (('highestBid' in resdict[pair]) == True)):
+                retTickers['pn'] = {'tksbroker' : 'pn', 'tksbid' : float(resdict[pair]['highestBid']), 'tksask' : float(resdict[pair]['lowestAsk']), 'symbol':pair}
+            else:
+                retTickers['pn'] = {'tksbroker' : 'pn', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
+    except urllib.error.HTTPError as e:
+        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+    except Exception as e:
+        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+
+    # エラー判定
+    if 'errormsg' in retTickers['pn']:
+        print('aaaaa-getTiccker(pn): errormsg:	{0}'.format(retTickers['pn']['errormsg']))
+
+    return retTickers
 
 def getTickerBt(pair):
     print('pair=' + pair)
