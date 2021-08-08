@@ -80,7 +80,7 @@
             for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++) {
                 /* 通貨ペア設定 */
                 let pair = genPair.next().value;
-                tblhead.rows[0].cells[cidx].textContent = pair.replace('USDT', '/USDT');
+                tblhead.rows[0].cells[cidx].textContent = pair.replace('_', '/');
                 let genBroker = GeneratorBroker();
                 for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
                     /* 業者名設定 */
@@ -91,7 +91,7 @@
             }
 
             /* Bid/Ask取得用のパラメータ生成 */
-            let endflg = [];
+            let rcvaskbids = [];
             let genBroker2 = GeneratorBroker();
             for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
                 let brokerid= genBroker2.next().value;
@@ -116,10 +116,8 @@
                         bidcell.textContent = data['bid'];
                         askcell.textContent = data['ask'];
                         /* 終了判定フラグに設定 */
-                        endflg.push({data});
-                        console.log(endflg.length + " " + endflg);
-
-                        if(endflg.length >= (window.arb2.Pairs.length * window.arb2.Brokers.length)) {
+                        rcvaskbids.push({data});
+                        if(rcvaskbids.length >= (window.arb2.Pairs.length * window.arb2.Brokers.length)) {
                             findMinMax();
                         }
                     });
@@ -127,7 +125,18 @@
             }
 
             function findMinMax() {
-                console.log('aaaaaaaaaaaaaaaaaa');
+                for(const pair of window.arb2.Pairs) {
+                    console.log(pair);
+                    const filteredret = rcvaskbids.filter(rcv => (rcv.data.pair==pair && isNaN(rcv.data.bid)==false));
+                    const minbuy = filteredret.reduce((prev, current) => (prev.data.ask < current.data.ask) ? prev : current);
+                    const maxsel = filteredret.reduce((prev, current) => (prev.data.bid > current.data.bid) ? prev : current);
+
+                    console.log('---------------------');
+                    console.log(minbuy);
+                    console.log('minask=' + minbuy);
+                    console.log(maxsel);
+                    console.log('maxask=' + maxsel);
+                }
             };
             // 最大値のオブジェクト検索
             // const max = data.reduce(function(prev, current) {
