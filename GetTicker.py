@@ -22,9 +22,9 @@ def getTickerBi(pair=None, retTickers=None):
             else:
                 retTickers['bi'] = {'tksbroker' : 'bi', 'errormsg' : str(biresdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'errormsg': str(e).replace("'", '') }
+        retTickers['bi'] = {'error' : 'httperror', 'tksbroker': 'bi', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['bi']:
@@ -60,9 +60,9 @@ def getTickerFx(pair=None, retTickers=None):
             else:
                 retTickers['fx'] = {'tksbroker' : 'fx', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'errormsg': str(e).replace("'", '') }
+        retTickers['fx'] = {'error' : 'httperror', 'tksbroker': 'fx', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['fx']:
@@ -95,9 +95,9 @@ def getTickerKc(pair=None, retTickers=None):
             else:
                 retTickers['kc'] = {'tksbroker' : 'kc', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'errormsg': str(e).replace("'", '') }
+        retTickers['kc'] = {'error' : 'httperror', 'tksbroker': 'kc', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['kc']:
@@ -125,9 +125,9 @@ def getTickerBs(pair=None, retTickers=None):
             else:
                 retTickers['bs'] = {'tksbroker' : 'bs', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'errormsg': str(e).replace("'", '') }
+        retTickers['bs'] = {'error' : 'httperror', 'tksbroker': 'bs', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['bs']:
@@ -162,9 +162,9 @@ def getTickerPn(pair=None, retTickers=None):
             else:
                 retTickers['pn'] = {'tksbroker' : 'pn', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'errormsg': str(e).replace("'", '') }
+        retTickers['pn'] = {'error' : 'httperror', 'tksbroker': 'pn', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['pn']:
@@ -198,9 +198,9 @@ def getTickerBt(pair=None, retTickers=None):
             else:
                 retTickers['bt'] = {'tksbroker' : 'bt', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'errormsg': str(e).replace("'", '') }
+        retTickers['bt'] = {'error' : 'httperror', 'tksbroker': 'bt', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['bt']:
@@ -234,9 +234,9 @@ def getTickerEx(pair=None, retTickers=None):
             else:
                 retTickers['ex'] = {'tksbroker' : 'ex', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'errormsg': str(e).replace("'", '') }
+        retTickers['ex'] = {'error' : 'httperror', 'tksbroker': 'ex', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['ex']:
@@ -264,7 +264,7 @@ def getTickerLq(pair=None, retTickers=None):
             retTickers['lq'] = tmpret
         else:
             id = '/624' if pair=='BTCUSDT' else '/625' if pair=='ETHUSDT' else ''
-            if id == '': return {'lq': {'error' : 'illigalargument', 'errormsg': 'not supporterd pair!!! {}'.format(pair)}}
+            if id == '': return {'lq': {'error' : 'illigalargument', 'errormsg': 'not supporterd pair!!! {}'.format(pair), 'symbol':pair}}
             ret = requests.get(endpoint + method + id, timeout=5)
             resdict = json.loads(ret.text)
             if ((('market_bid' in resdict) == True) and (('market_ask' in resdict) == True)):
@@ -272,9 +272,9 @@ def getTickerLq(pair=None, retTickers=None):
             else:
                 retTickers['lq'] = {'tksbroker' : 'lq', 'errormsg' : str(resdict).replace("'", ''), 'symbol':pair}
     except urllib.error.HTTPError as e:
-        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", '') }
+        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'tkserrcode' : e.code, 'errormsg': str(e).replace("'", ''), 'symbol':pair }
     except Exception as e:
-        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'errormsg': str(e).replace("'", '') }
+        retTickers['lq'] = {'error' : 'httperror', 'tksbroker': 'lq', 'errormsg': str(e).replace("'", ''), 'symbol':pair }
 
     # エラー判定
     if 'errormsg' in retTickers['lq']:

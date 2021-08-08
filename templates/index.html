@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="">
     <title>価格差チェック</title>
 </head>
 <body>
@@ -17,52 +18,117 @@
 
     <script type="text/javascript">
         /* 初期設定 */
-        window.myp = {}; 
-        const Traders = { 0:{trader:'Binance' , api:'getTickerBi', askcell:{}, bidcell:{}, },
-                          1:{trader:'FTX'     , api:'getTickerFx', askcell:{}, bidcell:{}, },
-                          2:{trader:'KuCoin'  , api:'getTickerKc', askcell:{}, bidcell:{}, },
-                          3:{trader:'Bitstamp', api:'getTickerBs', askcell:{}, bidcell:{}, },
-                          4:{trader:'Poloniex', api:'getTickerPn', askcell:{}, bidcell:{}, },
-                          5:{trader:'Bittrex' , api:'getTickerBt', askcell:{}, bidcell:{}, },
-                          6:{trader:'OKEx'    , api:'getTickerEx', askcell:{}, bidcell:{}, },
-                          7:{trader:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}, },}
-        const Pairs = { 0:'BTC/USD(T)', 1:'ETH/USD(T)', 2:'XRP/USD(T)', 3:'BNB/USD(T)'}
-        window.myp.Traders = Traders;
-        window.myp.Pairs   = Pairs;
+        const BrokerInfos = {bi:{BTC_USDT:{broker:'Binance' , api:'getTickerBi', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'Binance' , api:'getTickerBi', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'Binance' , api:'getTickerBi', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'Binance' , api:'getTickerBi', askcell:{}, bidcell:{}}},
+                                 //--------
+                             fx:{BTC_USDT:{broker:'FTX'     , api:'getTickerFx', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'FTX'     , api:'getTickerFx', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'FTX'     , api:'getTickerFx', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'FTX'     , api:'getTickerFx', askcell:{}, bidcell:{}}},
+                                 //--------
+                             kc:{BTC_USDT:{broker:'KuCoin'  , api:'getTickerKc', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'KuCoin'  , api:'getTickerKc', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'KuCoin'  , api:'getTickerKc', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'KuCoin'  , api:'getTickerKc', askcell:{}, bidcell:{}}},
+                                 //--------
+                             bs:{BTC_USDT:{broker:'Bitstamp', api:'getTickerBs', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'Bitstamp', api:'getTickerBs', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'Bitstamp', api:'getTickerBs', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'Bitstamp', api:'getTickerBs', askcell:{}, bidcell:{}}},
+                                 //--------
+                             pn:{BTC_USDT:{broker:'Poloniex', api:'getTickerPn', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'Poloniex', api:'getTickerPn', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'Poloniex', api:'getTickerPn', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'Poloniex', api:'getTickerPn', askcell:{}, bidcell:{}}},
+                                 //--------
+                             bt:{BTC_USDT:{broker:'Bittrex' , api:'getTickerBt', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'Bittrex' , api:'getTickerBt', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'Bittrex' , api:'getTickerBt', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'Bittrex' , api:'getTickerBt', askcell:{}, bidcell:{}}},
+                                 //--------
+                             ex:{BTC_USDT:{broker:'OKEx'    , api:'getTickerEx', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'OKEx'    , api:'getTickerEx', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'OKEx'    , api:'getTickerEx', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'OKEx'    , api:'getTickerEx', askcell:{}, bidcell:{}}},
+                                 //--------
+                             lq:{BTC_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}},
+                                 ETH_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}},
+                                 XRP_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}},
+                                 BNB_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}}},};
+        window.arb2 = {};
+        window.arb2.Brokers= Object.keys(BrokerInfos);
+        window.arb2.Pairs  = Object.keys(BrokerInfos['bi']);
+        window.arb2.BrokerInfos = BrokerInfos;
 
         window.onload = function() {
-            /* TBLヘッダ設定 */
+            /* 前準備 */
             let tbls = document.getElementsByTagName('table');
             let tblhead = tbls.item(0).tHead;
-            for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++)
-                tblhead.rows[0].cells[cidx].textContent = Pairs[cidx-1];
-
             let tblbody = tbls.item(0).tBodies.item(0);
-            for(let ridx = 0; ridx < tblbody.rows.length; ridx++)
-                tblbody.rows[ridx].cells[0].textContent = Traders[ridx].trader;
 
-            /* Bid/Ask取得 */
+            function* GeneratorPair() {
+                yield* window.arb2.Pairs;
+            };
+
+            function* GeneratorBroker() {
+                yield* window.arb2.Brokers;
+            };
+
+            let genPair = GeneratorPair();
+            for(let cidx = 1; cidx < tblhead.rows[0].cells.length; cidx++) {
+                /* 通貨ペア設定 */
+                let pair = genPair.next().value;
+                tblhead.rows[0].cells[cidx].textContent = pair.replace('USDT', '/USDT');
+                let genBroker = GeneratorBroker();
+                for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
+                    /* 業者名設定 */
+                    let brokerid = genBroker.next().value;
+                    let brokerfullname = BrokerInfos[brokerid][pair].broker;
+                    tblbody.rows[ridx].cells[0].textContent = brokerfullname;
+                }
+            }
+
+            /* Bid/Ask取得用のパラメータ生成 */
+            let endflg = [];
+            let genBroker2 = GeneratorBroker();
             for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
+                let brokerid= genBroker2.next().value;
+                let genPair2 = GeneratorPair();
                 for(let cidx = 1; cidx < tblbody.rows[ridx].cells.length; cidx+=2) {
-                    let pair    = Pairs[(cidx-1)/2];
+                    let pair = genPair2.next().value;
                     let bidcell = tblbody.rows[ridx].cells[cidx];
                     let askcell = tblbody.rows[ridx].cells[cidx+1];
-                    let method  = Traders[ridx].api;
+                    let method  = BrokerInfos[brokerid][pair].api;
+                    BrokerInfos[brokerid][pair].bidcell = bidcell;
+                    BrokerInfos[brokerid][pair].askcell = askcell;
 
                     const sndprm  = {
                         method: "POST",
                         headers: { "Content-Type": "application/json; charset=utf-8" },
                         body: JSON.stringify({'pair':pair})
                     };
+
                     fetch(method, sndprm).then(res => {
                         return res.json();
                     }).then(data => {
                         bidcell.textContent = data['bid'];
                         askcell.textContent = data['ask'];
+                        /* 終了判定フラグに設定 */
+                        endflg.push({data});
+                        console.log(endflg.length + " " + endflg);
+
+                        if(endflg.length >= (window.arb2.Pairs.length * window.arb2.Brokers.length)) {
+                            findMinMax();
+                        }
                     });
                 }
             }
 
+            function findMinMax() {
+                console.log('aaaaaaaaaaaaaaaaaa');
+            };
             // 最大値のオブジェクト検索
             // const max = data.reduce(function(prev, current) {
             //     return (prev.y > current.y) ? prev : current
