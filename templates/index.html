@@ -63,6 +63,8 @@
         window.arb2.BrokerInfos = BrokerInfos;
 
         window.onload = function() {
+            window.arb2.InvestAmount = document.getElementById( "InvestAmount" ).value;
+            document.getElementById("dispInvestAmount").textContent = window.arb2.InvestAmount / 100;
             /* 前準備 */
             let tbls = document.getElementsByTagName('table');
             let tblhead = tbls.item(0).tHead;
@@ -138,13 +140,6 @@
                     console.log('maxask=' + maxsel);
                 }
             };
-            // 最大値のオブジェクト検索
-            // const max = data.reduce(function(prev, current) {
-            //     return (prev.y > current.y) ? prev : current
-            // }); //returns object
-            // 最大値のオブジェクト検索2
-            // const max = data.reduce((prev, current) => (prev.y > current.y) ? prev : current)
-
         };
     </script>
 
@@ -186,17 +181,57 @@
         </tbody>
     </table>
 
+    <br/>
+    ------------------------------------------------------------------------------------------------------------------------------
     <br/><br/>
     <span>投資金額(円) : </span><input type="number" id="InvestAmount" value="50000"><br/>
-    <span>USDT換算(USDT) : </span><span>500</span> &emsp;&emsp; <span>※1ドル=100円で計算</span>
+    <span>USDT換算(USDT) : </span><span id="dispInvestAmount">500</span> &emsp;&emsp; <span>※1ドル=100円で計算</span>
 
     <br/><br/>
+
+    <table border="1">
+        <caption text-align="left">手数料一覧(自通貨>ERC20>BEP20(BSC))</caption>
+        <thead>
+            <tr>
+                <th></th><th>着金</th><th>送金[BTC]</th><th>送金[ETH]</th><th>送金[XRP]</th><th>送金[BNB]</th><th>買い[%]</th><th>売り[%]</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Binance</th><td>0</td><td>0.00057(BTC)</td><td>0.003(BEP20)</td><td>0.25(XRP)</td><td>0.0005(BEP20)</td><td>0.1</td><td>0.1</td>
+            </tr>
+            <tr>
+                <th>FTX</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.07</td><td>0.07</td>
+            </tr>
+            <tr>
+                <th>KuCoin</th><td>0</td><td>0.0006(BTC)</td><td>0.004(ERC20)</td><td>0.2(XRP)</td><td>0.02(BEP20)</td><td>0.1</td><td>0.1</td>
+            </tr>
+            <tr>
+                <th>Bitstamp</th><td>0</td><td>0.0005</td><td>0.0035</td><td>0.02</td><td>---</td><td>0.5</td><td>0.5</td>
+            </tr>
+            <tr>
+                <th>Poloniex</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.155</td><td>0.155</td>
+            </tr>
+            <tr>
+                <th>Bittrex</th><td>0</td><td>0.0005※</td><td>0.003※</td><td>0.2※</td><td>---</td><td>0.35</td><td>0.35</td>
+            </tr>
+            <tr>
+                <th>OKEx</th><td>0</td><td>0.0004</td><td>0.003</td><td>0.1</td><td>---</td><td>0.1</td><td>0.1</td>
+            </tr>
+            <tr>
+                <th>Liquid</th><td>0</td><td>0.0007</td><td>0.01</td><td>0.25</td><td>---</td><td>0.1</td><td>0.1</td>
+            </tr>
+        </tbody>
+    </table>
+    *0.0005[BTC]≒2,000(円) &emsp;&emsp; *0.003[ETH]≒1,030(円) &emsp;&emsp; *0.2[XRP]≒18(円) &emsp;&emsp; 0.02[BNB]=780
+
+    <br/>
 
     <table border="1">
         <caption text-align="left">BTC/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料:USDT)</th><th>買い(BTC)</th><th>送金2(送金手数料:BTC)</th><th>売り(儲け:USDT)</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い(買い手数料[BTC])</th><th>送金2(送金手数料[BTC])</th><th>売り(売り手数料:儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
@@ -233,7 +268,7 @@
         <caption text-align="left">ETH/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料:USDT)</th><th>買い(ETH)</th><th>送金2(送金手数料:ETH)</th><th>売り(儲け:USDT)</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い(買い手数料[ETH])</th><th>送金2(送金手数料[ETH])</th><th>売り(売り手数料:儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
@@ -269,7 +304,7 @@
         <caption text-align="left">XRP/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料:USDT)</th><th>買い(XRP)</th><th>送金2(送金手数料:XRP)</th><th>売り(儲け:USDT)</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い(買い手数料[XRP])</th><th>送金2(送金手数料[XRP])</th><th>売り(売り手数料:儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
@@ -305,7 +340,7 @@
         <caption text-align="left">BNB/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料:USDT)</th><th>買い(BNB)</th><th>送金2(送金手数料:BNB)</th><th>売り(儲け:USDT)</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い(買い手数料[BNB])</th><th>送金2(送金手数料[BNB])</th><th>売り(売り手数料:儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
