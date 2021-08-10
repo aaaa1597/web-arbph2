@@ -57,18 +57,29 @@
                                  ETH_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}},
                                  XRP_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}},
                                  BNB_USDT:{broker:'Liquid'  , api:'getTickerLq', askcell:{}, bidcell:{}}},};
+
+        const Fees = {bi:{Deposit:0, Withdrawal:{USDT:{TRC20:1,ERC20:15},   BTC:0.00057, ETH:0.003,  XRP:0.25, BNB:0.0005}},
+                      fx:{Deposit:0, Withdrawal:{USDT:0,                    BTC:0,       ETH:0,      XRP:0,    BNB:0     }},
+                      kc:{Deposit:0, Withdrawal:{USDT:{TRC20:1,ERC20:20},   BTC:0.0006,  ETH:0.004,  XRP:0.2,  BNB:0.02  }},
+                      bs:{Deposit:0, Withdrawal:{USDT:2.5,                  BTC:0.0005,  ETH:0.0035, XRP:0.02, BNB:'---' }},
+                      pn:{Deposit:0, Withdrawal:{USDT:0,                    BTC:0,       ETH:0,      XRP:0,    BNB:0     }},
+                      bt:{Deposit:0, Withdrawal:{USDT:69,                   BTC:0.0003,  ETH:0.0137, XRP:1,    BNB:'---' }},
+                      ex:{Deposit:0, Withdrawal:{USDT:{        ERC20:0.88}, BTC:0.0004,  ETH:0.003,  XRP:0.1,  BNB:'---' }},
+                      lq:{Deposit:0, Withdrawal:{USDT:{TRC20:0,ERC20:5},    BTC:0.0007,  ETH:0.01,   XRP:0.25, BNB:'---' }},};
         window.arb2 = {};
-        window.arb2.Brokers= Object.keys(BrokerInfos);
-        window.arb2.Pairs  = Object.keys(BrokerInfos['bi']);
+        window.arb2.Brokers     = Object.keys(BrokerInfos);
+        window.arb2.Pairs       = Object.keys(BrokerInfos['bi']);
         window.arb2.BrokerInfos = BrokerInfos;
+        window.arb2.Fees        = Fees;
 
         window.onload = function() {
-            window.arb2.InvestAmount = document.getElementById( "InvestAmount" ).value;
-            document.getElementById("dispInvestAmount").textContent = window.arb2.InvestAmount / 100;
+            InvestAmountJPY = document.getElementById( "InvestAmount" ).value;
+            window.arb2.InvestAmountUSDT = InvestAmountJPY / 100;
+            document.getElementById("InvestAmountUSDT").textContent = window.arb2.InvestAmountUSDT ;
             /* 前準備 */
-            let tbls = document.getElementsByTagName('table');
-            let tblhead = tbls.item(0).tHead;
-            let tblbody = tbls.item(0).tBodies.item(0);
+            let tbl = document.getElementById('MarketInfo');
+            let tblhead = tbl.tHead;
+            let tblbody = tbl.tBodies.item(0);
 
             function* GeneratorPair() {
                 yield* window.arb2.Pairs;
@@ -126,6 +137,42 @@
                 }
             }
 
+            function id2name(id) {
+                if     (id == 'bi') return 'Binance';
+                else if(id == 'fx') return 'FTX';
+                else if(id == 'kc') return 'KuCoin';
+                else if(id == 'bs') return 'Bitstamp';
+                else if(id == 'pn') return 'Poloniex';
+                else if(id == 'bt') return 'Bittrex';
+                else if(id == 'ex') return 'OKEx';
+                else if(id == 'lq') return 'Liquid';
+            }
+            function getWithdrawalFee(currency, fromId, toId) {
+                console.log('getWithdrawalFee() s arg=', currency, fromId, toId);
+                if(fromId == toId) return '---';
+                if(currency=="USDT") {
+                    if(['bi','kc','lq'].includes(fromId) && ['bi','kc','lq'].includes(toId)) {
+                        console.log('getWithdrawalFee() 000 ret=', window.arb2.Fees[fromId].Withdrawal[currency].TRC20);
+                        return window.arb2.Fees[fromId].Withdrawal[currency].TRC20;
+}
+                    else if(['bi','kc','lq'].includes(fromId)) {
+                        console.log('getWithdrawalFee() 001 ret=', window.arb2.Fees[fromId].Withdrawal[currency].ERC20);
+                        return window.arb2.Fees[fromId].Withdrawal[currency].ERC20;
+}
+                    else if(fromId == 'ex') {
+                        console.log('getWithdrawalFee() 002 ret=', window.arb2.Fees[fromId].Withdrawal[currency].ERC20);
+                        return window.arb2.Fees[fromId].Withdrawal[currency].ERC20;
+}
+                    else {
+                        console.log('getWithdrawalFee() 003 ret=', window.arb2.Fees[fromId].Withdrawal[currency]);
+                        return window.arb2.Fees[fromId].Withdrawal[currency];
+}
+                }
+                else {
+                    console.log('getWithdrawalFee() 004 ret=', window.arb2.Fees[fromId].Withdrawal[currency]);
+              	    return window.arb2.Fees[fromId].Withdrawal[currency];
+                }
+            }
             function findMinMax() {
                 for(const pair of window.arb2.Pairs) {
                     console.log(pair);
@@ -138,6 +185,66 @@
                     console.log('minask=' + minbuy);
                     console.log(maxsel);
                     console.log('maxask=' + maxsel);
+
+                    if(minbuy.data.ask >= maxsel.data.bid) {
+                        document.getElementById("tbl"+pair).style.visibility = "collapse";
+                        document.getElementById("none"+pair).style.visibility = "visible";
+                        continue;
+                    }
+
+                    document.getElementById("tbl"+pair).style.visibility = "visible";
+                    document.getElementById("none"+pair).style.visibility = "collapse";
+
+                    let tbl = document.getElementById("tbl"+pair);
+                    let tblbody = tbl.tBodies.item(0);
+
+                    /* 買い業者/売り業者設定 */
+                    tblbody.rows[0].cells[2].textContent = id2name(minbuy.data.broker);
+                    tblbody.rows[0].cells[5].textContent = id2name(maxsel.data.broker);
+
+                    let genBroker = GeneratorBroker();
+                    for(let ridx = 0; ridx < tblbody.rows.length; ridx++) {
+                        let brokerid= genBroker.next().value;
+                        let inival = window.arb2.InvestAmountUSDT;
+
+                        /* 送金1(送金手数料[USDT]) 設定 */
+                        let lvalue = window.arb2.InvestAmountUSDT;
+                        let withdrawalfee1 = getWithdrawalFee('USDT', brokerid, minbuy.data.broker);
+                        withdrawalfee1 = (withdrawalfee1=='---') ? 0 : withdrawalfee1;
+                        lvalue -= withdrawalfee1;
+　　　　　　　　　　　　tblbody.rows[ridx].cells[1].textContent = lvalue + '(' + withdrawalfee1 + ')';
+
+                        /* 買い[BTC] 設定 */
+                        lvalue /= minbuy.data.ask;
+                        lvalue = Math.floor(lvalue * 100000) / 100000;
+                        if(ridx == 0)
+    　　　　　　　　　　　　tblbody.rows[ridx].cells[3].textContent = lvalue;
+                        else
+    　　　　　　　　　　　　tblbody.rows[ridx].cells[2].textContent = lvalue;
+
+                        /* 送金2(送金手数料[通貨]) 設定 */
+                        let withdrawalfee2 = getWithdrawalFee(pair.replace('_USDT', ''), minbuy.data.broker, maxsel.data.broker);
+                        lvalue -= withdrawalfee2;
+                        lvalue = Math.floor(lvalue * 100000) / 100000;
+                        if(ridx == 0)
+    　　　　　　　　　　　　tblbody.rows[ridx].cells[4].textContent = lvalue + '(' + withdrawalfee2 + ')';
+                        else
+    　　　　　　　　　　　　tblbody.rows[ridx].cells[3].textContent = lvalue + '(' + withdrawalfee2 + ')';
+
+                        /* 売り(儲け[USDT]) 設定 */
+                        lvalue *= maxsel.data.bid;
+                        lvalue = Math.floor(lvalue * 100000) / 100000;
+                        let benefit = Math.floor((lvalue-inival)*100)/100;
+                        let backcolor = (benefit <= 0) ? 'white' : 'cyan';
+                        if(ridx == 0) {
+    　　　　　　　　　　　　tblbody.rows[ridx].cells[6].textContent = lvalue + '(' + benefit + ')';
+                            tblbody.rows[ridx].cells[6].style.backgroundColor = backcolor;
+                        }
+                        else {
+    　　　　　　　　　　　　tblbody.rows[ridx].cells[4].textContent = lvalue + '(' + benefit + ')';
+                            tblbody.rows[ridx].cells[4].style.backgroundColor = backcolor;
+                        }
+                    }
                 }
             };
         };
@@ -159,8 +266,48 @@
         <li>今売買した時の利益金額</li>
     </ol>
 
-    <h2>通貨ペアの現在値</h2>
+    <h2>手数料一覧</h2>
     <table border="1">
+        <caption text-align="left">手数料一覧(自通貨>ERC20>BEP20(BSC))</caption>
+        <thead>
+            <tr>
+                <th></th><th>着金</th><th>送金[USDT]</th><th>送金[BTC]</th><th>送金[ETH]</th><th>送金[XRP]</th><th>送金[BNB]</th><th>買い[%]</th><th>売り[%]</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Binance</th><td>0</td><td>1(TRC20)<br/>15(ERC20)</td><td>0.00057(BTC)</td><td>0.003(BEP20)</td><td>0.25(XRP)</td><td>0.0005(BEP20)</td><td>0.1</td><td>0.1</td>
+            </tr>
+            <tr>
+                <th>FTX</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.07</td><td>0.07</td>
+            </tr>
+            <tr>
+                <th>KuCoin</th><td>0</td><td>1(TRC20)<br/>20(ERC20)</td><td>0.0006(BTC)</td><td>0.004(ERC20)</td><td>0.2(XRP)</td><td>0.02(BEP20)</td><td>0.1</td><td>0.1</td>
+            </tr>
+            <tr>
+                <th>Bitstamp</th><td>0</td><td>2.5</td><td>0.0005</td><td>0.0035</td><td>0.02</td><td>---</td><td>0.5</td><td>0.5</td>
+            </tr>
+            <tr>
+                <th>Poloniex</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.155</td><td>0.155</td>
+            </tr>
+            <tr>
+                <th>Bittrex</th><td>0</td><td>69</td><td>0.0003</td><td>0.0137</td><td>1</td><td>---</td><td>0.35</td><td>0.35</td>
+            </tr>
+            <tr>
+                <th>OKEx</th><td>0</td><td>0.88(ERC20)</td><td>0.0004</td><td>0.003</td><td>0.1</td><td>---</td><td>0.1</td><td>0.1</td>
+            </tr>
+            <tr>
+                <th>Liquid</th><td>0</td><td>0(TRC20)<br/>5(ERC20)</td><td>0.0007</td><td>0.01</td><td>0.25</td><td>---</td><td>0.1</td><td>0.1</td>
+            </tr>
+        </tbody>
+    </table>
+    *0.0005[BTC]≒2,000(円) &emsp;&emsp; *0.003[ETH]≒1,030(円) &emsp;&emsp; *0.2[XRP]≒18(円) &emsp;&emsp; 0.02[BNB]=780
+    <br/>
+    ------------------------------------------------------------------------------------------------------------------------------
+    <br/><br/>
+
+    <h2>通貨ペアの現在値</h2>
+    <table border="1" id="MarketInfo">
         <caption text-align="left">現在値</caption>
         <thead>
             <tr>
@@ -200,63 +347,24 @@
 
     <br/><br/>
     ------------------------------------------------------------------------------------------------------------------------------<br/>
-    <span>投資金額(円) : </span><input type="number" id="InvestAmount" value="50000"><br/>
-    <span>USDT換算(USDT) : </span><span id="dispInvestAmount">500</span> &emsp;&emsp; <span>※1ドル=100円で計算</span>
+    <span>投資金額(円) : </span><input type="number" id="InvestAmount" value="50000"> ←50000固定(要望あれば作るけど、めんどい)。<br/>
+    <span>USDT換算(USDT) : </span><span id="InvestAmountUSDT">500</span> &emsp;&emsp; <span>※1ドル=100円で計算</span><br/>
     ------------------------------------------------------------------------------------------------------------------------------<br/>
     <br/>
 
-    <h2>手数料一覧</h2>
-    <table border="1">
-        <caption text-align="left">手数料一覧(自通貨>ERC20>BEP20(BSC))</caption>
-        <thead>
-            <tr>
-                <th></th><th>着金</th><th>送金[USDT]</th><th>送金[BTC]</th><th>送金[ETH]</th><th>送金[XRP]</th><th>送金[BNB]</th><th>買い[%]</th><th>売り[%]</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>Binance</th><td>0</td><td>1(TRC20)<br/>15(ERC20)</td><td>0.00057(BTC)</td><td>0.003(BEP20)</td><td>0.25(XRP)</td><td>0.0005(BEP20)</td><td>0.1</td><td>0.1</td>
-            </tr>
-            <tr>
-                <th>FTX</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.07</td><td>0.07</td>
-            </tr>
-            <tr>
-                <th>KuCoin</th><td>0</td><td>1(TRC20)<br/>20(ERC20)</td><td>0.0006(BTC)</td><td>0.004(ERC20)</td><td>0.2(XRP)</td><td>0.02(BEP20)</td><td>0.1</td><td>0.1</td>
-            </tr>
-            <tr>
-                <th>Bitstamp</th><td>0</td><td>2.5</td><td>0.0005</td><td>0.0035</td><td>0.02</td><td>---</td><td>0.5</td><td>0.5</td>
-            </tr>
-            <tr>
-                <th>Poloniex</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.155</td><td>0.155</td>
-            </tr>
-            <tr>
-                <th>Bittrex</th><td>0</td><td>69</td><td>0.0003</td><td>0.0137</td><td>1</td><td>---</td><td>0.35</td><td>0.35</td>
-            </tr>
-            <tr>
-                <th>OKEx</th><td>0</td><td>0.88(ERC20)</td><td>0.0004</td><td>0.003</td><td>0.1</td><td>---</td><td>0.1</td><td>0.1</td>
-            </tr>
-            <tr>
-                <th>Liquid</th><td>0</td><td>0(TRC20)<br/>5(ERC20)</td><td>0.0007</td><td>0.01</td><td>0.25</td><td>---</td><td>0.1</td><td>0.1</td>
-            </tr>
-        </tbody>
-    </table>
-    *0.0005[BTC]≒2,000(円) &emsp;&emsp; *0.003[ETH]≒1,030(円) &emsp;&emsp; *0.2[XRP]≒18(円) &emsp;&emsp; 0.02[BNB]=780
-
-    <br/>
-    ------------------------------------------------------------------------------------------------------------------------------
-    <br/><br/>
-
     <h2>今売買した時の利益金額</h2>
-    <table border="1">
+
+    <div style="visibility: collapse;" id="noneBTC_USDT">・BTC/USDTは該当なし</div>
+    <table border="1" id="tblBTC_USDT">
         <caption text-align="left">BTC/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料[USDT])</th><th>買い[BTC]</th><th>送金2(送金手数料[BTC])</th><th>売り(儲け[USDT])</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い業者</th><th>買い[BTC]</th><th>送金2(送金手数料[BTC])</th><th>売り業者</th><th>売り(儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>Binance</th><td>---</td><td>---</td><td>---</td><td>---</td>
+                <th>Binance</th><td>---</td><td rowspan="8">---</td><td>---</td><td>---</td><td rowspan="8">---</td><td>---</td>
             </tr>
             <tr>
                 <th>FTX</th><td>---</td><td>---</td><td>---</td><td>---</td>
@@ -281,19 +389,20 @@
             </tr>
         </tbody>
     </table>
-
     <br/>
 
-    <table border="1">
+    <div style="visibility: collapse;" id="noneETH_USDT">・ETH/USDTは該当なし</div>
+    <div style="visibility: collapse;">・ETH/USDTは該当なし</div>
+    <table border="1" id="tblETH_USDT">
         <caption text-align="left">ETH/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料[USDT])</th><th>買い[ETH]</th><th>送金2(送金手数料[ETH])</th><th>売り(儲け[USDT])</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い業者</th><th>買い[ETH]</th><th>送金2(送金手数料[ETH])</th><th>売り業者</th><th>売り(儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>Binance</th><td>---</td><td>---</td><td>---</td><td>---</td>
+                <th>Binance</th><td>---</td><td rowspan="8">---</td><td>---</td><td>---</td><td rowspan="8">---</td><td>---</td>
             </tr>
             <tr>
                 <th>FTX</th><td>---</td><td>---</td><td>---</td><td>---</td>
@@ -318,18 +427,19 @@
             </tr>
         </tbody>
     </table>
-
     <br/>
-    <table border="1">
+
+    <div style="visibility: collapse;" id="noneXRP_USDT">・XRP/USDTは該当なし</div>
+    <table border="1" id="tblXRP_USDT">
         <caption text-align="left">XRP/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料[USDT])</th><th>買い[XRP]</th><th>送金2(送金手数料[XRP])</th><th>売り(儲け[USDT])</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い業者</th><th>買い[XRP]</th><th>送金2(送金手数料[XRP])</th><th>売り業者</th><th>売り(儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>Binance</th><td>---</td><td>---</td><td>---</td><td>---</td>
+                <th>Binance</th><td>---</td><td rowspan="8">---</td><td>---</td><td>---</td><td rowspan="8">---</td><td>---</td>
             </tr>
             <tr>
                 <th>FTX</th><td>---</td><td>---</td><td>---</td><td>---</td>
@@ -354,18 +464,19 @@
             </tr>
         </tbody>
     </table>
-
     <br/>
-    <table border="1">
+
+    <div style="visibility: collapse;" id="noneBNB_USDT">・BNB/USDTは該当なし</div>
+    <table border="1" id="tblBNB_USDT">
         <caption text-align="left">BNB/USDT</caption>
         <thead>
             <tr>
-                <th></th><th>送金1(送金手数料[USDT])</th><th>買い[BNB]</th><th>送金2(送金手数料[BNB])</th><th>売り(儲け[USDT])</th>
+                <th></th><th>送金1(送金手数料[USDT])</th><th>買い業者</th><th>買い[BNB]</th><th>送金2(送金手数料[BNB])</th><th>売り業者</th><th>売り(儲け[USDT])</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>Binance</th><td>---</td><td>---</td><td>---</td><td>---</td>
+                <th>Binance</th><td>---</td><td rowspan="8">---</td><td>---</td><td>---</td><td rowspan="8">---</td><td>---</td>
             </tr>
             <tr>
                 <th>FTX</th><td>---</td><td>---</td><td>---</td><td>---</td>
