@@ -47,7 +47,7 @@ def getTickerFx(pair=None, retTickers=None):
     try:
         if pair is None:
             ret = requests.get(endpoint+method, timeout=30)
-            retres = [item for item in json.loads(ret.text) if item['symbol'] in ('BTC/USD','BTC/USDT','ETH/USD','ETH/USDT','XRP/USD','XRP/USDT','BNB/USD','BNB/USDT')]
+            retres = [item for item in json.loads(ret.text) if item['name'] in ('BTC/USD','BTC/USDT','ETH/USD','ETH/USDT','XRP/USD','XRP/USDT','BNB/USD','BNB/USDT')]
             tmpret = {}
             for item in retres:
                 tmpret[item['symbol']] = {'tksbid':float(item['bid']), 'tksask':float(item['ask']), 'symbol':item['name']}
@@ -74,6 +74,7 @@ def getTickerKc(pair=None, retTickers=None):
     if retTickers is None: retTickers = {}
     endpoint = 'https://api.kucoin.com'
     method = '/api/v1/market/orderbook/level1'
+    # https://api.kucoin.com/api/v1/market/allTickers
     # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BTC-USDT
     # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=ETH-USDT
     # https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XRP-USDT
@@ -144,7 +145,7 @@ def getTickerPn(pair=None, retTickers=None):
     # USDT_ETH
     # USDT_XRP
     # USDT_BNB
-    ###### https://www.bitstamp.net/api/v2/ticker/bnbusdt/
+    ###### https://poloniex.com/public?command=returnTicker
 
     try:
         if pair is None:
@@ -248,11 +249,7 @@ def getTickerLq(pair=None, retTickers=None):
     if retTickers is None: retTickers = {}
     endpoint = 'https://api.liquid.com'
     method = '/products'
-    # https://www.okex.com/api/spot/v3/instruments/ticker
-    # https://www.okex.com/api/spot/v3/instruments/BTC-USDT/ticker
-    # https://www.okex.com/api/spot/v3/instruments/ETH-USDT/ticker
-    # https://www.okex.com/api/spot/v3/instruments/XRP-USDT/ticker
-    ###### https://www.okex.com/api/spot/v3/instruments/BNB-USDT/ticker
+    # https://api.liquid.com/products
 
     try:
         if pair is None:
